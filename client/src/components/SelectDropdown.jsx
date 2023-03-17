@@ -4,7 +4,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 
-const LangSelect = ({ label, lang, handleChange }) => {
+const SelectDropdown = ({ label, lang, handleChange }) => {
   return (
     <div>
       <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }} size="small">
@@ -29,4 +29,4 @@ const LangSelect = ({ label, lang, handleChange }) => {
   );
 };
 
-export default LangSelect;
+export default SelectDropdown;
