@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap');
 
 * {
     box-sizing: border-box;
@@ -15,7 +16,7 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 100vh;
+    height: 60%;
 }
 .header__container {
     width: 100%;
@@ -27,7 +28,8 @@
 .header__right__source {
     display: flex;
     align-items: center;
-    width:25%
+    width:25%;
+    justify-content:space-between
 }
 .header__right__target {
     display: flex;
@@ -37,7 +39,7 @@
 .loader {
     display: flex;
     justify-content: center;
-    margin-top: 50%;
+    margin-top: 40%;
 }
 .header {
     border: 1px solid #ddd;
@@ -72,7 +74,7 @@
 }
 .copyIcon {
     height: 25px;
-    color: #3e54ac;
+    color: teal;
     cursor: pointer;
 }
 
@@ -85,8 +87,21 @@
 
 .homeIcon {
     height: 25px;
-    color: royalblue;
+    color: teal;
     cursor: pointer;
     display: flex;
     width:5%
+}
+
+.page_header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height:20%;
+}
+
+.page_header h2 {
+    color: teal;
+    font-size: xxx-large;
+    font-family: "Noto Sans", sans-serif;
 }

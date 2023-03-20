@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Editor from "@monaco-editor/react";
-import { CircularProgress, Button } from "@mui/material";
+import { CircularProgress, Button, Snackbar, Alert } from "@mui/material";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 import Copy from "../icons/Copy";
 import Delete from "../icons/Delete";
@@ -10,6 +11,13 @@ const CodeEditor = ({ sourceLang, targetLang, setLoadEditor }) => {
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [anchor] = useState({
+    vertical: "top",
+    horizontal: "right",
+  });
+
+  const { vertical, horizontal } = anchor;
 
   const handleSubmit = () => {
     setLoading(true);
@@ -41,6 +49,15 @@ const CodeEditor = ({ sourceLang, targetLang, setLoadEditor }) => {
       .catch((err) => console.error(err));
   };
 
+  const handleCopy = () => setOpen(true);
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
+
   return (
     <>
       <header className="header__container">
@@ -60,7 +77,7 @@ const CodeEditor = ({ sourceLang, targetLang, setLoadEditor }) => {
             >
               Convert
             </Button>
-            <Delete />
+            <Delete setInput={setInput} />
           </div>
         </div>
         <div className="header">
@@ -70,7 +87,11 @@ const CodeEditor = ({ sourceLang, targetLang, setLoadEditor }) => {
             Target
           </h3>
           <div className="header__right__target">
-            <Copy />
+            <CopyToClipboard text={output} onCopy={handleCopy}>
+              <span>
+                <Copy />
+              </span>
+            </CopyToClipboard>
           </div>
         </div>
       </header>
@@ -110,6 +131,23 @@ const CodeEditor = ({ sourceLang, targetLang, setLoadEditor }) => {
           )}
         </div>
       </div>
+      <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        anchorOrigin={{ vertical, horizontal }}
+        key={vertical + horizontal}
+      >
+        <Alert
+          elevation={6}
+          variant="filled"
+          onClose={handleClose}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Copied Successfully!
+        </Alert>
+      </Snackbar>
     </>
   );
 };
