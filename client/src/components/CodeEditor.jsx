@@ -1,62 +1,59 @@
-import React, { useState } from "react";
-import Editor from "@monaco-editor/react";
-import { CircularProgress, Button, Snackbar, Alert } from "@mui/material";
-import { CopyToClipboard } from "react-copy-to-clipboard";
+import React, { useState } from 'react'
+import Editor from '@monaco-editor/react'
+import { CircularProgress, Button, Snackbar, Alert } from '@mui/material'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
 
-import Copy from "../icons/Copy";
-import Delete from "../icons/Delete";
-import Home from "../icons/Home";
+import Copy from '../icons/Copy'
+import Delete from '../icons/Delete'
+import Home from '../icons/Home'
 
 const CodeEditor = ({ sourceLang, targetLang, setLoadEditor }) => {
-  const [input, setInput] = useState("");
-  const [output, setOutput] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [input, setInput] = useState('')
+  const [output, setOutput] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [open, setOpen] = useState(false)
   const [anchor] = useState({
-    vertical: "top",
-    horizontal: "right",
-  });
+    vertical: 'top',
+    horizontal: 'right',
+  })
 
-  const { vertical, horizontal } = anchor;
+  const { vertical, horizontal } = anchor
 
   const handleSubmit = () => {
-    setLoading(true);
-    fetch("http://localhost:4000/convert", {
-      method: "POST",
-      mode: "cors", // no-cors, *cors, same-origin
-      cache: "no-cache",
+    setLoading(true)
+    fetch('http://localhost:4000/convert', {
+      method: 'POST',
+      mode: 'cors', // no-cors, *cors, same-origin
+      cache: 'no-cache',
       body: JSON.stringify({
         sourceCode: input,
         sourceLang,
         targetLang,
       }),
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     })
       .then((res) => {
-        return res.json();
+        return res.json()
       })
       .then((data) => {
-        let response = data?.response?.text.split("```");
-        const targetCode =
-          response.length === 1
-            ? response[0].substr(response[0].indexOf("\n") + 2)
-            : response[1].substr(response[1].indexOf("\n") + 1);
-        setLoading(false);
-        setOutput(targetCode);
+        console.log(data?.response)
+        let response = data?.response?.choices[0]?.message?.content
+        setLoading(false)
+        setOutput(response)
       })
-      .catch((err) => console.error(err));
-  };
+      .catch((err) => console.error(err))
+  }
 
-  const handleCopy = () => setOpen(true);
+  const handleCopy = () => setOpen(true)
   const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
+    if (reason === 'clickaway') {
+      return
     }
 
-    setOpen(false);
-  };
+    setOpen(false)
+  }
 
   return (
     <>
@@ -64,7 +61,7 @@ const CodeEditor = ({ sourceLang, targetLang, setLoadEditor }) => {
         <div className="header">
           <Home setLoadEditor={setLoadEditor} />
           <h3
-            style={{ display: "flex", width: "70%", justifyContent: "center" }}
+            style={{ display: 'flex', width: '70%', justifyContent: 'center' }}
           >
             Source
           </h3>
@@ -82,7 +79,7 @@ const CodeEditor = ({ sourceLang, targetLang, setLoadEditor }) => {
         </div>
         <div className="header">
           <h3
-            style={{ display: "flex", width: "95%", justifyContent: "center" }}
+            style={{ display: 'flex', width: '95%', justifyContent: 'center' }}
           >
             Target
           </h3>
@@ -103,9 +100,9 @@ const CodeEditor = ({ sourceLang, targetLang, setLoadEditor }) => {
             defaultValue=""
             value={input}
             onChange={(value) => {
-              setInput(value);
+              setInput(value)
             }}
-            language={sourceLang}
+            defaultLanguage={sourceLang.toLowerCase()}
             theme="vs-dark"
           />
         </div>
@@ -118,7 +115,7 @@ const CodeEditor = ({ sourceLang, targetLang, setLoadEditor }) => {
             <Editor
               height="90vh"
               className="editor"
-              language={targetLang}
+              defaultLanguage={targetLang.toLowerCase()}
               options={{
                 domReadOnly: true,
                 readOnly: true,
@@ -143,13 +140,13 @@ const CodeEditor = ({ sourceLang, targetLang, setLoadEditor }) => {
           variant="filled"
           onClose={handleClose}
           severity="success"
-          sx={{ width: "100%" }}
+          sx={{ width: '100%' }}
         >
           Copied Successfully!
         </Alert>
       </Snackbar>
     </>
-  );
-};
+  )
+}
 
-export default CodeEditor;
+export default CodeEditor
