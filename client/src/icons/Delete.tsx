@@ -1,17 +1,26 @@
 import { type Dispatch, type SetStateAction } from "react";
 
 type DeleteProps = {
-  setInput: Dispatch<SetStateAction<string>>;
+  setInput?: Dispatch<SetStateAction<string>>;
+  onClear?: () => void;
 };
 
-const Delete = ({ setInput }: DeleteProps) => {
+const Delete = ({ setInput, onClear }: DeleteProps = {}) => {
+  const handleClick = () => {
+    if (onClear) {
+      onClear();
+      return;
+    }
+    setInput?.("");
+  };
+
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       fill="currentColor"
       className="w-6 h-6 deleteIcon"
-      onClick={() => setInput("")}
+      onClick={handleClick}
     >
       <path
         fillRule="evenodd"

@@ -7,17 +7,17 @@ import {
 import Editor from "@monaco-editor/react";
 import {
   CircularProgress,
-  Button,
   Snackbar,
   Alert,
   type SnackbarOrigin,
   type SnackbarCloseReason,
 } from "@mui/material";
+
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
+import EditorHeader from "./EditorHeader";
 import Copy from "../icons/Copy";
 import Delete from "../icons/Delete";
-import Home from "../icons/Home";
 
 type CodeEditorProps = {
   sourceLang: string;
@@ -78,43 +78,25 @@ const CodeEditor = ({
 
   return (
     <>
-      <header className="header__container">
-        <div className="header">
-          <Home setLoadEditor={setLoadEditor} />
-          <h3
-            style={{ display: "flex", width: "70%", justifyContent: "center" }}
-          >
-            Source
-          </h3>
-          <div className="header__right__source">
-            <Button
-              variant="contained"
-              onClick={handleSubmit}
-              color="success"
-              size="medium"
-            >
-              Convert
-            </Button>
-            <Delete setInput={setInput} />
-          </div>
-        </div>
-        <div className="header">
-          <h3
-            style={{ display: "flex", width: "95%", justifyContent: "center" }}
-          >
-            Target
-          </h3>
-          <div className="header__right__target">
-            <CopyToClipboard text={output} onCopy={handleCopy}>
-              <span>
-                <Copy />
-              </span>
-            </CopyToClipboard>
-          </div>
-        </div>
-      </header>
+      <EditorHeader setLoadEditor={setLoadEditor} />
       <div className="code__container">
-        <div className="code">
+        <div className="editor-card">
+          <div className="editor-card__meta">
+            <span className="editor-card__badge">Input</span>
+            <div className="editor-card__labels--center">
+              <p className="editor-card__label">SOURCE</p>
+              <p className="editor-card__sub">
+                Language: {sourceLang || "select a language"}
+              </p>
+            </div>
+            <button
+              className="editor-icon-btn editor-icon-btn--danger"
+              onClick={() => setInput("")}
+              aria-label="Clear input"
+            >
+              <Delete />
+            </button>
+          </div>
           <Editor
             height="90vh"
             className="editor"
@@ -125,10 +107,37 @@ const CodeEditor = ({
             theme="vs-dark"
           />
         </div>
-        <div className="output">
+        <div className="convert-column">
+          <button
+            className="convert-fab"
+            onClick={handleSubmit}
+            disabled={!input || loading}
+          >
+            {loading ? "…" : "⇄"}
+          </button>
+        </div>
+        <div className="editor-card">
+          <div className="editor-card__meta">
+            <span className="editor-card__badge">Output</span>
+            <div className="editor-card__labels--center">
+              <p className="editor-card__label">TARGET</p>
+              <p className="editor-card__sub">
+                Language: {targetLang || "select a language"}
+              </p>
+            </div>
+            <CopyToClipboard text={output} onCopy={handleCopy}>
+              <button
+                className="editor-icon-btn"
+                aria-label="Copy output"
+                title="Copy output"
+              >
+                <Copy />
+              </button>
+            </CopyToClipboard>
+          </div>
           {loading ? (
             <div className="loader">
-              <CircularProgress color="success" />
+              <CircularProgress sx={{ color: "#28C2B6" }} />
             </div>
           ) : (
             <Editor
@@ -159,7 +168,12 @@ const CodeEditor = ({
           variant="filled"
           onClose={handleClose}
           severity="success"
-          sx={{ width: "100%" }}
+          sx={{
+            width: "100%",
+            bgcolor: "#28C2B6",
+            color: "#101530",
+            "& .MuiAlert-icon": { color: "#101530" },
+          }}
         >
           Copied Successfully!
         </Alert>
