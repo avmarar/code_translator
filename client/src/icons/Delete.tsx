@@ -1,6 +1,10 @@
-import React from "react";
+import { type Dispatch, type SetStateAction } from "react";
 
-const Delete = ({ setInput }) => {
+type DeleteProps = {
+  setInput: Dispatch<SetStateAction<string>>;
+};
+
+const Delete = ({ setInput }: DeleteProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

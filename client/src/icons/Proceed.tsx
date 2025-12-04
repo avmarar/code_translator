@@ -1,6 +1,10 @@
-import React from "react";
+import { type Dispatch, type SetStateAction } from "react";
 
-const Proceed = ({ setLoadEditor }) => {
+type ProceedProps = {
+  setLoadEditor: Dispatch<SetStateAction<boolean>>;
+};
+
+const Proceed = ({ setLoadEditor }: ProceedProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

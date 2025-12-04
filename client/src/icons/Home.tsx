@@ -1,6 +1,10 @@
-import React from "react";
+import { type Dispatch, type SetStateAction } from "react";
 
-const Home = ({ setLoadEditor }) => {
+type HomeProps = {
+  setLoadEditor: Dispatch<SetStateAction<boolean>>;
+};
+
+const Home = ({ setLoadEditor }: HomeProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

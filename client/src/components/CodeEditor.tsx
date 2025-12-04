@@ -1,59 +1,80 @@
-import React, { useState } from 'react'
-import Editor from '@monaco-editor/react'
-import { CircularProgress, Button, Snackbar, Alert } from '@mui/material'
-import { CopyToClipboard } from 'react-copy-to-clipboard'
+import {
+  useState,
+  type Dispatch,
+  type SetStateAction,
+  type SyntheticEvent,
+} from "react";
+import Editor from "@monaco-editor/react";
+import {
+  CircularProgress,
+  Button,
+  Snackbar,
+  Alert,
+  type SnackbarOrigin,
+  type SnackbarCloseReason,
+} from "@mui/material";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
-import Copy from '../icons/Copy'
-import Delete from '../icons/Delete'
-import Home from '../icons/Home'
+import Copy from "../icons/Copy";
+import Delete from "../icons/Delete";
+import Home from "../icons/Home";
 
-const CodeEditor = ({ sourceLang, targetLang, setLoadEditor }) => {
-  const [input, setInput] = useState('')
-  const [output, setOutput] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [open, setOpen] = useState(false)
-  const [anchor] = useState({
-    vertical: 'top',
-    horizontal: 'right',
-  })
+type CodeEditorProps = {
+  sourceLang: string;
+  targetLang: string;
+  setLoadEditor: Dispatch<SetStateAction<boolean>>;
+};
 
-  const { vertical, horizontal } = anchor
+const anchorOrigin: SnackbarOrigin = {
+  vertical: "top",
+  horizontal: "right",
+};
+
+const CodeEditor = ({
+  sourceLang,
+  targetLang,
+  setLoadEditor,
+}: CodeEditorProps) => {
+  const [input, setInput] = useState<string>("");
+  const [output, setOutput] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleSubmit = () => {
-    setLoading(true)
-    fetch('http://localhost:4000/convert', {
-      method: 'POST',
-      mode: 'cors', // no-cors, *cors, same-origin
-      cache: 'no-cache',
+    setLoading(true);
+    fetch("http://localhost:4000/convert", {
+      method: "POST",
+      mode: "cors",
+      cache: "no-cache",
       body: JSON.stringify({
         sourceCode: input,
         sourceLang,
         targetLang,
       }),
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     })
-      .then((res) => {
-        return res.json()
-      })
+      .then((res) => res.json())
       .then((data) => {
-        console.log(data?.response)
-        let response = data?.response?.choices[0]?.message?.content
-        setLoading(false)
-        setOutput(response)
+        console.log(data?.response);
+        const response = data?.response?.choices?.[0]?.message?.content ?? "";
+        setLoading(false);
+        setOutput(response);
       })
-      .catch((err) => console.error(err))
-  }
+      .catch((err) => console.error(err));
+  };
 
-  const handleCopy = () => setOpen(true)
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return
+  const handleCopy = () => setOpen(true);
+  const handleClose = (
+    _event?: SyntheticEvent | Event,
+    reason?: SnackbarCloseReason
+  ) => {
+    if (reason === "clickaway") {
+      return;
     }
-
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
   return (
     <>
@@ -61,7 +82,7 @@ const CodeEditor = ({ sourceLang, targetLang, setLoadEditor }) => {
         <div className="header">
           <Home setLoadEditor={setLoadEditor} />
           <h3
-            style={{ display: 'flex', width: '70%', justifyContent: 'center' }}
+            style={{ display: "flex", width: "70%", justifyContent: "center" }}
           >
             Source
           </h3>
@@ -79,7 +100,7 @@ const CodeEditor = ({ sourceLang, targetLang, setLoadEditor }) => {
         </div>
         <div className="header">
           <h3
-            style={{ display: 'flex', width: '95%', justifyContent: 'center' }}
+            style={{ display: "flex", width: "95%", justifyContent: "center" }}
           >
             Target
           </h3>
@@ -99,9 +120,7 @@ const CodeEditor = ({ sourceLang, targetLang, setLoadEditor }) => {
             className="editor"
             defaultValue=""
             value={input}
-            onChange={(value) => {
-              setInput(value)
-            }}
+            onChange={(value) => setInput(value ?? "")}
             defaultLanguage={sourceLang.toLowerCase()}
             theme="vs-dark"
           />
@@ -122,7 +141,7 @@ const CodeEditor = ({ sourceLang, targetLang, setLoadEditor }) => {
               }}
               defaultValue=""
               value={output}
-              onChange={(value) => setOutput(value)}
+              onChange={(value) => setOutput(value ?? "")}
               theme="vs-dark"
             />
           )}
@@ -132,21 +151,21 @@ const CodeEditor = ({ sourceLang, targetLang, setLoadEditor }) => {
         open={open}
         autoHideDuration={6000}
         onClose={handleClose}
-        anchorOrigin={{ vertical, horizontal }}
-        key={vertical + horizontal}
+        anchorOrigin={anchorOrigin}
+        key={`${anchorOrigin.vertical}${anchorOrigin.horizontal}`}
       >
         <Alert
           elevation={6}
           variant="filled"
           onClose={handleClose}
           severity="success"
-          sx={{ width: '100%' }}
+          sx={{ width: "100%" }}
         >
           Copied Successfully!
         </Alert>
       </Snackbar>
     </>
-  )
-}
+  );
+};
 
-export default CodeEditor
+export default CodeEditor;
