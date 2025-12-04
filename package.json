@@ -1,0 +1,21 @@
+{
+  "name": "code_translator",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Monorepo for the code translator client and server apps",
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "start": "npm run dev",
+    "dev": "concurrently \"npm run start --workspace server\" \"npm run start --workspace client\"",
+    "start:client": "npm run start --workspace client",
+    "start:server": "npm run start --workspace server",
+    "build": "concurrently \"npm run build --workspace server\" \"npm run build --workspace client\"",
+    "test": "npm run test --workspace client"
+  },
+  "devDependencies": {
+    "concurrently": "9.2.1"
+  }
+}
