@@ -8,3 +8,9 @@ node_modules
 
 # production
 /build
+
+# environment files
+.env
+.env.*
+.env.local
+!.env.local.sample
