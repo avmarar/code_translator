@@ -17,6 +17,6 @@
     "lint": "npm run lint --workspace client && npm run lint --workspace server"
   },
   "devDependencies": {
-    "concurrently": "9.2.1"
+    "concurrently": "9.2.4"
   }
 }
